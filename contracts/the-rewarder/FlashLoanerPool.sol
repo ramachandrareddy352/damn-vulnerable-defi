@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
-import "../DamnValuableToken.sol";
+import "../DamnValuableToken.sol"; 
 
 /**
  * @title FlashLoanerPool
@@ -30,13 +30,11 @@ contract FlashLoanerPool is ReentrancyGuard {
         if (amount > balanceBefore) {
             revert NotEnoughTokenBalance();
         }
-
         if (!msg.sender.isContract()) {
             revert CallerIsNotContract();
         }
 
         liquidityToken.transfer(msg.sender, amount);
-
         msg.sender.functionCall(abi.encodeWithSignature("receiveFlashLoan(uint256)", amount));
 
         if (liquidityToken.balanceOf(address(this)) < balanceBefore) {

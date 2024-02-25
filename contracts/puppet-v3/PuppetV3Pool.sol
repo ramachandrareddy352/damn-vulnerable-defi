@@ -64,7 +64,7 @@ contract PuppetV3Pool {
             address(weth) // quoteToken
         );
     }
-
+ 
     function _toUint128(uint256 amount) private pure returns (uint128 n) {
         require(amount == (n = uint128(amount)));
     }

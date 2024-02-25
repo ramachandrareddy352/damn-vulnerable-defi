@@ -6,7 +6,7 @@ import "solady/src/utils/SafeTransferLib.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@gnosis.pm/safe-contracts/contracts/GnosisSafe.sol";
 import "@gnosis.pm/safe-contracts/contracts/proxies/IProxyCreationCallback.sol";
-
+ 
 /**
  * @title WalletRegistry
  * @notice A registry for Gnosis Safe wallets.
@@ -24,9 +24,7 @@ contract WalletRegistry is IProxyCreationCallback, Ownable {
     IERC20 public immutable token;
 
     mapping(address => bool) public beneficiaries;
-
-    // owner => wallet
-    mapping(address => address) public wallets;
+    mapping(address => address) public wallets;     // owner => wallet
 
     error NotEnoughFunds();
     error CallerNotFactory();
@@ -41,7 +39,7 @@ contract WalletRegistry is IProxyCreationCallback, Ownable {
         address masterCopyAddress,
         address walletFactoryAddress,
         address tokenAddress,
-        address[] memory initialBeneficiaries
+        address[] memory initialBeneficiaries  /// @info := may be zero also
     ) {
         _initializeOwner(msg.sender);
 
@@ -58,7 +56,7 @@ contract WalletRegistry is IProxyCreationCallback, Ownable {
     }
 
     function addBeneficiary(address beneficiary) external onlyOwner {
-        beneficiaries[beneficiary] = true;
+        beneficiaries[beneficiary] = true;  /// @info := beneficiary may be zero address
     }
 
     /**
@@ -69,13 +67,14 @@ contract WalletRegistry is IProxyCreationCallback, Ownable {
         external
         override
     {
-        if (token.balanceOf(address(this)) < PAYMENT_AMOUNT) { // fail early
+        if (token.balanceOf(address(this)) < PAYMENT_AMOUNT) { // balance should be greater than 10 ethers
             revert NotEnoughFunds();
         }
 
         address payable walletAddress = payable(proxy);
 
         // Ensure correct factory and master copy
+        // only walletfactory can call the function
         if (msg.sender != walletFactory) {
             revert CallerNotFactory();
         }
@@ -86,17 +85,17 @@ contract WalletRegistry is IProxyCreationCallback, Ownable {
 
         // Ensure initial calldata was a call to `GnosisSafe::setup`
         if (bytes4(initializer[:4]) != GnosisSafe.setup.selector) {
-            revert InvalidInitialization();
+            revert InvalidInitialization();   // first 4 bytes is function selector 
         }
 
         // Ensure wallet initialization is the expected
         uint256 threshold = GnosisSafe(walletAddress).getThreshold();
-        if (threshold != EXPECTED_THRESHOLD) {
+        if (threshold != EXPECTED_THRESHOLD) {   // 1
             revert InvalidThreshold(threshold);
         }
 
         address[] memory owners = GnosisSafe(walletAddress).getOwners();
-        if (owners.length != EXPECTED_OWNERS_COUNT) {
+        if (owners.length != EXPECTED_OWNERS_COUNT) {  // 1
             revert InvalidOwnersCount(owners.length);
         }
 

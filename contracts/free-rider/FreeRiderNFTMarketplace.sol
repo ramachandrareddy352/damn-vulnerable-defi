@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.0; 
 
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
@@ -13,7 +13,7 @@ contract FreeRiderNFTMarketplace is ReentrancyGuard {
     using Address for address payable;
 
     DamnValuableNFT public token;
-    uint256 public offersCount;
+    uint256 public offersCount;  // slot-1
 
     // tokenId -> price
     mapping(uint256 => uint256) private offers;
@@ -30,11 +30,11 @@ contract FreeRiderNFTMarketplace is ReentrancyGuard {
     error InsufficientPayment();
 
     constructor(uint256 amount) payable {
-        DamnValuableNFT _token = new DamnValuableNFT();
-        _token.renounceOwnership();
+        DamnValuableNFT _token = new DamnValuableNFT();   // gas savings
+        _token.renounceOwnership();   // no owner for token contract
         for (uint256 i = 0; i < amount; ) {
-            _token.safeMint(msg.sender);
-            unchecked { ++i; }
+            _token.safeMint(msg.sender);   // minter role is address(this)
+            unchecked { ++i; }   // deployer can mint 'i' no.of tokens
         }
         token = _token;
     }
@@ -56,7 +56,7 @@ contract FreeRiderNFTMarketplace is ReentrancyGuard {
     }
 
     function _offerOne(uint256 tokenId, uint256 price) private {
-        DamnValuableNFT _token = token; // gas savings
+        DamnValuableNFT _token = token;   // gas savings
 
         if (price == 0)
             revert InvalidPrice();
@@ -65,14 +65,14 @@ contract FreeRiderNFTMarketplace is ReentrancyGuard {
             revert CallerNotOwner(tokenId);
 
         if (_token.getApproved(tokenId) != address(this) && !_token.isApprovedForAll(msg.sender, address(this)))
-            revert InvalidApproval();
+            revert InvalidApproval();   // msg.sender have to approve this contract for all NFTs
 
         offers[tokenId] = price;
+        /// @audit-high/medium := what if the owner remove approval for this contract after calling offer function , the offers mapping is not updated
 
         assembly { // gas savings
             sstore(0x02, add(sload(0x02), 0x01))
         }
-
         emit NFTOffered(msg.sender, tokenId, price);
     }
 
@@ -81,7 +81,7 @@ contract FreeRiderNFTMarketplace is ReentrancyGuard {
             unchecked {
                 _buyOne(tokenIds[i]);
                 ++i;
-            }
+            } 
         }
     }
 
@@ -90,7 +90,7 @@ contract FreeRiderNFTMarketplace is ReentrancyGuard {
         if (priceToPay == 0)
             revert TokenNotOffered(tokenId);
 
-        if (msg.value < priceToPay)
+        if (msg.value < priceToPay)   /// @audit-high := we pay for single nft and get all tokens
             revert InsufficientPayment();
 
         --offersCount;
@@ -100,7 +100,9 @@ contract FreeRiderNFTMarketplace is ReentrancyGuard {
         _token.safeTransferFrom(_token.ownerOf(tokenId), msg.sender, tokenId);
 
         // pay seller using cached token
+        /// @audit-high := after transfering token the owner of token is changed, here we are paying money to msg.sender and owner od nft is not getting money 
         payable(_token.ownerOf(tokenId)).sendValue(priceToPay);
+        // extra amount is send to this contract
 
         emit NFTBought(msg.sender, tokenId, priceToPay);
     }

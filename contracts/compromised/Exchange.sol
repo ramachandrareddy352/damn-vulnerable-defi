@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./TrustfulOracle.sol";
 import "../DamnValuableNFT.sol";
-
+ 
 /**
  * @title Exchange
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)

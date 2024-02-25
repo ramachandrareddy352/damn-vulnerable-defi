@@ -41,9 +41,7 @@ describe('[Challenge] The rewarder', function () {
             await liquidityToken.transfer(users[i].address, depositAmount);
             await liquidityToken.connect(users[i]).approve(rewarderPool.address, depositAmount);
             await rewarderPool.connect(users[i]).deposit(depositAmount);
-            expect(
-                await accountingToken.balanceOf(users[i].address)
-            ).to.be.eq(depositAmount);
+            expect(await accountingToken.balanceOf(users[i].address)).to.be.eq(depositAmount);
         }
         expect(await accountingToken.totalSupply()).to.be.eq(depositAmount * BigInt(users.length));
         expect(await rewardToken.totalSupply()).to.be.eq(0);
@@ -55,9 +53,7 @@ describe('[Challenge] The rewarder', function () {
         let rewardsInRound = await rewarderPool.REWARDS();
         for (let i = 0; i < users.length; i++) {
             await rewarderPool.connect(users[i]).distributeRewards();
-            expect(
-                await rewardToken.balanceOf(users[i].address)
-            ).to.be.eq(rewardsInRound.div(users.length));
+            expect(await rewardToken.balanceOf(users[i].address)).to.be.eq(rewardsInRound.div(users.length));
         }
         expect(await rewardToken.totalSupply()).to.be.eq(rewardsInRound);
 
@@ -70,14 +66,17 @@ describe('[Challenge] The rewarder', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        await ethers.provider.send("evm_increaseTime", [5 * 24 * 60 * 60]); // 5 days
+        this.attackerContract = await (await ethers.getContractFactory("AttackTheRewarder", player)).deploy(
+            flashLoanPool.address, rewarderPool.address, liquidityToken.address, rewardToken.address
+        )
+        await this.attackerContract.attack();
     });
 
     after(async function () {
         /** SUCCESS CONDITIONS - NO NEED TO CHANGE ANYTHING HERE */
         // Only one round must have taken place
-        expect(
-            await rewarderPool.roundNumber()
-        ).to.be.eq(3);
+        expect(await rewarderPool.roundNumber()).to.be.eq(3);
 
         // Users should get neglegible rewards this round
         for (let i = 0; i < users.length; i++) {
@@ -98,8 +97,6 @@ describe('[Challenge] The rewarder', function () {
 
         // Balance of DVT tokens in player and lending pool hasn't changed
         expect(await liquidityToken.balanceOf(player.address)).to.eq(0);
-        expect(
-            await liquidityToken.balanceOf(flashLoanPool.address)
-        ).to.eq(TOKENS_IN_LENDER_POOL);
+        expect(await liquidityToken.balanceOf(flashLoanPool.address)).to.eq(TOKENS_IN_LENDER_POOL);
     });
 });

@@ -4,7 +4,7 @@ const { expect } = require('chai');
 describe('[Challenge] Backdoor', function () {
     let deployer, users, player;
     let masterCopy, walletFactory, token, walletRegistry;
-
+ 
     const AMOUNT_TOKENS_DISTRIBUTED = 40n * 10n ** 18n;
 
     before(async function () {
@@ -28,16 +28,10 @@ describe('[Challenge] Backdoor', function () {
 
         for (let i = 0; i < users.length; i++) {
             // Users are registered as beneficiaries
-            expect(
-                await walletRegistry.beneficiaries(users[i])
-            ).to.be.true;
+            expect(await walletRegistry.beneficiaries(users[i])).to.be.true;
 
             // User cannot add beneficiaries
-            await expect(
-                walletRegistry.connect(
-                    await ethers.getSigner(users[i])
-                ).addBeneficiary(users[i])
-            ).to.be.revertedWithCustomError(walletRegistry, 'Unauthorized');
+            await expect(walletRegistry.connect(await ethers.getSigner(users[i])).addBeneficiary(users[i])).to.be.revertedWithCustomError(walletRegistry, 'Unauthorized');
         }
 
         // Transfer tokens to be distributed to the registry
@@ -46,32 +40,24 @@ describe('[Challenge] Backdoor', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        const AttackBackdoor = await ethers.getContractFactory("AttackBackdoor", player);
+        this.attackerContract = await AttackBackdoor.deploy(walletRegistry.address, users)
     });
 
     after(async function () {
         /** SUCCESS CONDITIONS - NO NEED TO CHANGE ANYTHING HERE */
-
         // Player must have used a single transaction
         expect(await ethers.provider.getTransactionCount(player.address)).to.eq(1);
 
         for (let i = 0; i < users.length; i++) {
             let wallet = await walletRegistry.wallets(users[i]);
-            
             // User must have registered a wallet
-            expect(wallet).to.not.eq(
-                ethers.constants.AddressZero,
-                'User did not register a wallet'
-            );
-
+            expect(wallet).to.not.eq(ethers.constants.AddressZero,'User did not register a wallet')
             // User is no longer registered as a beneficiary
-            expect(
-                await walletRegistry.beneficiaries(users[i])
-            ).to.be.false;
+            expect(await walletRegistry.beneficiaries(users[i])).to.be.false;
         }
 
         // Player must own all tokens
-        expect(
-            await token.balanceOf(player.address)
-        ).to.eq(AMOUNT_TOKENS_DISTRIBUTED);
+        expect(await token.balanceOf(player.address)).to.eq(AMOUNT_TOKENS_DISTRIBUTED);
     });
 });

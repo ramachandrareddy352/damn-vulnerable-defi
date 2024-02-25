@@ -49,9 +49,7 @@ contract PuppetV2Pool {
 
         // internal accounting
         deposits[msg.sender] += amount;
-
         require(_token.transfer(msg.sender, borrowAmount), "Transfer failed");
-
         emit Borrowed(msg.sender, amount, borrowAmount, block.timestamp);
     }
 
@@ -62,8 +60,8 @@ contract PuppetV2Pool {
 
     // Fetch the price from Uniswap v2 using the official libraries
     function _getOracleQuote(uint256 amount) private view returns (uint256) {
-        (uint256 reservesWETH, uint256 reservesToken) =
+        (uint256 reservesWETH, uint256 reservesToken) = 
             UniswapV2Library.getReserves(_uniswapFactory, address(_weth), address(_token));
-        return UniswapV2Library.quote(amount.mul(10 ** 18), reservesToken, reservesWETH);
+        return UniswapV2Library.quote(amount.mul(10 ** 18), reservesToken, reservesWETH); // less,many,less
     }
 }

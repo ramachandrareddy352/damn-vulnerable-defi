@@ -19,7 +19,7 @@ contract TrusterLenderPool is ReentrancyGuard {
 
     constructor(DamnValuableToken _token) {
         token = _token;
-    }
+    } 
 
     function flashLoan(uint256 amount, address borrower, address target, bytes calldata data)
         external
@@ -29,9 +29,11 @@ contract TrusterLenderPool is ReentrancyGuard {
         uint256 balanceBefore = token.balanceOf(address(this));
 
         token.transfer(borrower, amount);
+
+        /// @audit - Execute abitarty call to any contract on behalf of pool 
         target.functionCall(data);
 
-        if (token.balanceOf(address(this)) < balanceBefore)
+        if (token.balanceOf(address(this)) < balanceBefore)  // balance should have to be shown same
             revert RepayFailed();
 
         return true;

@@ -10,7 +10,7 @@ import { IERC3156FlashBorrower, IERC3156FlashLender } from "@openzeppelin/contra
 /**
  * @title UnstoppableVault
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)
- */
+ */ 
 contract UnstoppableVault is IERC3156FlashLender, ReentrancyGuard, Owned, ERC4626 {
     using SafeTransferLib for ERC20;
     using FixedPointMathLib for uint256;
@@ -32,7 +32,7 @@ contract UnstoppableVault is IERC3156FlashLender, ReentrancyGuard, Owned, ERC462
     constructor(ERC20 _token, address _owner, address _feeRecipient)
         ERC4626(_token, "Oh Damn Valuable Token", "oDVT")
         Owned(_owner)
-    {
+    { 
         feeRecipient = _feeRecipient;
         emit FeeRecipientUpdated(_feeRecipient);
     }

@@ -10,7 +10,7 @@ import "./SimpleGovernance.sol";
 /**
  * @title SelfiePool
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)
- */
+ */ 
 contract SelfiePool is ReentrancyGuard, IERC3156FlashLender {
 
     ERC20Snapshot public immutable token;
@@ -44,7 +44,7 @@ contract SelfiePool is ReentrancyGuard, IERC3156FlashLender {
     function flashFee(address _token, uint256) external view returns (uint256) {
         if (address(token) != _token)
             revert UnsupportedCurrency();
-        return 0;
+        return 0;  // if token is correct token then flash fee is zero
     }
 
     function flashLoan(
@@ -58,18 +58,17 @@ contract SelfiePool is ReentrancyGuard, IERC3156FlashLender {
 
         token.transfer(address(_receiver), _amount);
         if (_receiver.onFlashLoan(msg.sender, _token, _amount, 0, _data) != CALLBACK_SUCCESS)
-            revert CallbackFailed();
+            revert CallbackFailed(); 
 
         if (!token.transferFrom(address(_receiver), address(this), _amount))
             revert RepayFailed();
-        
+
         return true;
     }
 
     function emergencyExit(address receiver) external onlyGovernance {
         uint256 amount = token.balanceOf(address(this));
         token.transfer(receiver, amount);
-
         emit FundsDrained(receiver, amount);
     }
 }

@@ -8,7 +8,7 @@ interface ISimpleGovernance {
         uint64 executedAt;
         address target;
         bytes data;
-    }
+    } 
 
     error NotEnoughVotes(address who);
     error CannotExecute(uint256 actionId);

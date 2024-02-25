@@ -82,11 +82,7 @@ describe('[Challenge] Puppet v3', function () {
             { gasLimit: 5000000 }
         );
 
-        let uniswapPoolAddress = await uniswapFactory.getPool(
-            weth.address,
-            token.address,
-            FEE
-        );
+        let uniswapPoolAddress = await uniswapFactory.getPool(weth.address, token.address, FEE);
         uniswapPool = new ethers.Contract(uniswapPoolAddress, poolJson.abi, deployer);
         await uniswapPool.increaseObservationCardinalityNext(40);
         
@@ -103,7 +99,7 @@ describe('[Challenge] Puppet v3', function () {
             amount0Desired: UNISWAP_INITIAL_WETH_LIQUIDITY,
             amount1Desired: UNISWAP_INITIAL_TOKEN_LIQUIDITY,
             amount0Min: 0,
-            amount1Min: 0,
+            amount1Min: 0, 
             deadline: (await ethers.provider.getBlock('latest')).timestamp * 2,
         }, { gasLimit: 5000000 });        
 
@@ -123,18 +119,14 @@ describe('[Challenge] Puppet v3', function () {
 
         // Ensure oracle in lending pool is working as expected. At this point, DVT/WETH price should be 1:1.
         // To borrow 1 DVT, must deposit 3 ETH
-        expect(
-            await lendingPool.calculateDepositOfWETHRequired(1n * 10n ** 18n)
-        ).to.be.eq(3n * 10n ** 18n);
+        expect(await lendingPool.calculateDepositOfWETHRequired(1n * 10n ** 18n)).to.be.eq(3n * 10n ** 18n);
 
         // To borrow all DVT in lending pool, user must deposit three times its value
-        expect(
-            await lendingPool.calculateDepositOfWETHRequired(LENDING_POOL_INITIAL_TOKEN_BALANCE)
-        ).to.be.eq(LENDING_POOL_INITIAL_TOKEN_BALANCE * 3n);
+        expect(await lendingPool.calculateDepositOfWETHRequired(LENDING_POOL_INITIAL_TOKEN_BALANCE))
+        .to.be.eq(LENDING_POOL_INITIAL_TOKEN_BALANCE * 3n);
 
         // Ensure player doesn't have that much ETH
         expect(await ethers.provider.getBalance(player.address)).to.be.lt(LENDING_POOL_INITIAL_TOKEN_BALANCE * 3n);
-
         initialBlockTimestamp = (await ethers.provider.getBlock('latest')).timestamp;
     });
 
@@ -144,18 +136,12 @@ describe('[Challenge] Puppet v3', function () {
 
     after(async function () {
         /** SUCCESS CONDITIONS - NO NEED TO CHANGE ANYTHING HERE */
-
         // Block timestamp must not have changed too much
-        expect(
-            (await ethers.provider.getBlock('latest')).timestamp - initialBlockTimestamp
-        ).to.be.lt(115, 'Too much time passed');
+        expect((await ethers.provider.getBlock('latest')).timestamp - initialBlockTimestamp)
+        .to.be.lt(115, 'Too much time passed');
 
         // Player has taken all tokens out of the pool        
-        expect(
-            await token.balanceOf(lendingPool.address)
-        ).to.be.eq(0);
-        expect(
-            await token.balanceOf(player.address)
-        ).to.be.gte(LENDING_POOL_INITIAL_TOKEN_BALANCE);
+        expect(await token.balanceOf(lendingPool.address)).to.be.eq(0);
+        expect(await token.balanceOf(player.address)).to.be.gte(LENDING_POOL_INITIAL_TOKEN_BALANCE);
     });
 });

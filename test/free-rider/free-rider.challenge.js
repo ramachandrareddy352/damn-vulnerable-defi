@@ -10,14 +10,12 @@ const { setBalance } = require("@nomicfoundation/hardhat-network-helpers");
 describe('[Challenge] Free Rider', function () {
     let deployer, player, devs;
     let weth, token, uniswapFactory, uniswapRouter, uniswapPair, marketplace, nft, devsContract;
-
+ 
     // The NFT marketplace will have 6 tokens, at 15 ETH each
     const NFT_PRICE = 15n * 10n ** 18n;
     const AMOUNT_OF_NFTS = 6;
     const MARKETPLACE_INITIAL_ETH_BALANCE = 90n * 10n ** 18n;
-    
     const PLAYER_INITIAL_ETH_BALANCE = 1n * 10n ** 17n;
-
     const BOUNTY = 45n * 10n ** 18n;
 
     // Initial reserves for the Uniswap v2 pool
@@ -49,10 +47,7 @@ describe('[Challenge] Free Rider', function () {
         
         // Approve tokens, and then create Uniswap v2 pair against WETH and add liquidity
         // The function takes care of deploying the pair automatically
-        await token.approve(
-            uniswapRouter.address,
-            UNISWAP_INITIAL_TOKEN_RESERVE
-        );
+        await token.approve(uniswapRouter.address, UNISWAP_INITIAL_TOKEN_RESERVE);
         await uniswapRouter.addLiquidityETH(
             token.address,                                              // token to be traded against WETH
             UNISWAP_INITIAL_TOKEN_RESERVE,                              // amountTokenDesired
@@ -106,11 +101,16 @@ describe('[Challenge] Free Rider', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        const FreeRiderAttacker = await ethers.getContractFactory("AttackFreeRider", player);
+        
+        this.attackerContract = await FreeRiderAttacker.deploy(uniswapPair.address, marketplace.address, weth.address, nft.address, devsContract.address);
+
+        await this.attackerContract.attack({value: ethers.utils.parseEther("0.045")});
     });
 
     after(async function () {
         /** SUCCESS CONDITIONS - NO NEED TO CHANGE ANYTHING HERE */
-
+ 
         // The devs extract all NFTs from its associated contract
         for (let tokenId = 0; tokenId < AMOUNT_OF_NFTS; tokenId++) {
             await nft.connect(devs).transferFrom(devsContract.address, devs.address, tokenId);
@@ -119,9 +119,7 @@ describe('[Challenge] Free Rider', function () {
 
         // Exchange must have lost NFTs and ETH
         expect(await marketplace.offersCount()).to.be.eq(0);
-        expect(
-            await ethers.provider.getBalance(marketplace.address)
-        ).to.be.lt(MARKETPLACE_INITIAL_ETH_BALANCE);
+        expect(await ethers.provider.getBalance(marketplace.address)).to.be.lt(MARKETPLACE_INITIAL_ETH_BALANCE);
 
         // Player must have earned all ETH
         expect(await ethers.provider.getBalance(player.address)).to.be.gt(BOUNTY);

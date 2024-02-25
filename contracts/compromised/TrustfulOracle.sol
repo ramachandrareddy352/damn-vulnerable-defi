@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "solady/src/utils/LibSort.sol";
-
+ 
 /**
  * @title TrustfulOracle
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)
@@ -32,7 +32,7 @@ contract TrustfulOracle is AccessControlEnumerable {
             }
         }
         if (enableInitialization)
-            _setupRole(INITIALIZER_ROLE, msg.sender);
+            _setupRole(INITIALIZER_ROLE, msg.sender);  // TrustfulOracleInitializer is INITIALIZER_ROLE
     }
 
     // A handy utility allowing the deployer to setup initial prices (only once)
@@ -41,6 +41,7 @@ contract TrustfulOracle is AccessControlEnumerable {
         onlyRole(INITIALIZER_ROLE)
     {
         // Only allow one (symbol, price) per source
+        // INITIALIZER_ROLE can call it for multiple times
         require(sources.length == symbols.length && symbols.length == prices.length);
         for (uint256 i = 0; i < sources.length;) {
             unchecked {

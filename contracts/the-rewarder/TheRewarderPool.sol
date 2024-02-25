@@ -5,7 +5,7 @@ import "solady/src/utils/FixedPointMathLib.sol";
 import "solady/src/utils/SafeTransferLib.sol";
 import { RewardToken } from "./RewardToken.sol";
 import { AccountingToken } from "./AccountingToken.sol";
-
+ 
 /**
  * @title TheRewarderPool
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)
@@ -66,6 +66,7 @@ contract TheRewarderPool {
     }
 
     function withdraw(uint256 amount) external {
+        // amount should be zero also
         accountingToken.burn(msg.sender, amount);
         SafeTransferLib.safeTransfer(liquidityToken, msg.sender, amount);
     }
@@ -97,8 +98,8 @@ contract TheRewarderPool {
 
     function _hasRetrievedReward(address account) private view returns (bool) {
         return (
-            lastRewardTimestamps[account] >= lastRecordedSnapshotTimestamp
-                && lastRewardTimestamps[account] <= lastRecordedSnapshotTimestamp + REWARDS_ROUND_MIN_DURATION
+            lastRewardTimestamps[account] >= lastRecordedSnapshotTimestamp && 
+            lastRewardTimestamps[account] <= lastRecordedSnapshotTimestamp + REWARDS_ROUND_MIN_DURATION
         );
     }
 

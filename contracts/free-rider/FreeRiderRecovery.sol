@@ -14,8 +14,8 @@ contract FreeRiderRecovery is ReentrancyGuard, IERC721Receiver {
     using Address for address payable;
 
     uint256 private constant PRIZE = 45 ether;
-    address private immutable beneficiary;
-    IERC721 private immutable nft;
+    address private immutable beneficiary;   // player
+    IERC721 private immutable nft;   // DamnValuableNFT
     uint256 private received;
 
     error NotEnoughFunding();
@@ -41,21 +41,16 @@ contract FreeRiderRecovery is ReentrancyGuard, IERC721Receiver {
     {
         if (msg.sender != address(nft))
             revert CallerNotNFT();
-
         if (tx.origin != beneficiary)
             revert OriginNotBeneficiary();
-
         if (_tokenId > 5)
             revert InvalidTokenID(_tokenId);
-
         if (nft.ownerOf(_tokenId) != address(this))
             revert StillNotOwningToken(_tokenId);
-
         if (++received == 6) {
-            address recipient = abi.decode(_data, (address));
+            address recipient = abi.decode(_data, (address));   // this encode data should be player address
             payable(recipient).sendValue(PRIZE);
         }
-
         return IERC721Receiver.onERC721Received.selector;
     }
 }
