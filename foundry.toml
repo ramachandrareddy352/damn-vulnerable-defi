@@ -1,0 +1,15 @@
+[profile.default]
+src = "src"
+out = "artifacts"
+libs = ["node_modules"]
+remappings = [
+    "@gnosis.pm/=node_modules/@gnosis.pm/",
+    "@openzeppelin/=node_modules/@openzeppelin/",
+    "@uniswap/=node_modules/@uniswap/",
+    "base64-sol/=node_modules/base64-sol/",
+    "hardhat/=node_modules/hardhat/",
+    "solady/=node_modules/solady/",
+    "solmate/=node_modules/solmate/",
+]
+
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options

@@ -1,19 +1,66 @@
-![](cover.png)
+## Foundry
 
-**A set of challenges to learn offensive security of smart contracts in Ethereum.**
+**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
-Featuring flash loans, price oracles, governance, NFTs, lending pools, smart contract wallets, timelocks, and more!
+Foundry consists of:
 
-## Play
+-   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
+-   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
+-   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
+-   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
 
-Visit [damnvulnerabledefi.xyz](https://damnvulnerabledefi.xyz)
+## Documentation
 
-## Help
+https://book.getfoundry.sh/
 
-For Q&A and troubleshooting running Damn Vulnerable DeFi, go [here](https://github.com/tinchoabbate/damn-vulnerable-defi/discussions/categories/support-q-a-troubleshooting).
+## Usage
 
-## Disclaimer
+### Build
 
-All Solidity code, practices and patterns in this repository are DAMN VULNERABLE and for educational purposes only.
+```shell
+$ forge build
+```
 
-DO NOT USE IN PRODUCTION.
+### Test
+
+```shell
+$ forge test
+```
+
+### Format
+
+```shell
+$ forge fmt
+```
+
+### Gas Snapshots
+
+```shell
+$ forge snapshot
+```
+
+### Anvil
+
+```shell
+$ anvil
+```
+
+### Deploy
+
+```shell
+$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```
+
+### Cast
+
+```shell
+$ cast <subcommand>
+```
+
+### Help
+
+```shell
+$ forge --help
+$ anvil --help
+$ cast --help
+```
