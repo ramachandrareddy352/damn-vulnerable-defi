@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "solmate/src/utils/FixedPointMathLib.sol";
 import "solmate/src/utils/ReentrancyGuard.sol";
-import { SafeTransferLib, ERC4626, ERC20 } from "solmate/src/mixins/ERC4626.sol";
+import { SafeTransferLib, ERC4626, ERC20 } from "solmate/src/mixins/ERC4626.sol";   // @valut-contract
 import "solmate/src/auth/Owned.sol";
 import { IERC3156FlashBorrower, IERC3156FlashLender } from "@openzeppelin/contracts/interfaces/IERC3156.sol";
 
@@ -44,7 +44,7 @@ contract UnstoppableVault is IERC3156FlashLender, ReentrancyGuard, Owned, ERC462
         if (address(asset) != _token)
             return 0;
 
-        return totalAssets();
+        return totalAssets();   // max fee is balance of this contract
     }
 
     /**
@@ -55,6 +55,7 @@ contract UnstoppableVault is IERC3156FlashLender, ReentrancyGuard, Owned, ERC462
             revert UnsupportedCurrency();
 
         if (block.timestamp < end && _amount < maxFlashLoan(_token)) {
+            // within the end of grace period the fee is zero
             return 0;
         } else {
             return _amount.mulWadUp(FEE_FACTOR);
