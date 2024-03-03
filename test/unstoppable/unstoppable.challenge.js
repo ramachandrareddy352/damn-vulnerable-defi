@@ -51,6 +51,10 @@ describe("[Challenge] Unstoppable", function () {
 
   it("Execution", async function () {
     /** CODE YOUR SOLUTION HERE */
+
+    /**
+     * after transfering tokens to valut the totalAssests(balanceof[UnstoppableValut]) is increased but while checking at convertToShares(totalSupply) it is not matching with totalAssests because we are not paralllely updating convertToShares(totalSupply) in 4626 vault contract.
+     */
     await token
       .connect(player)
       .transfer(vault.address, INITIAL_PLAYER_TOKEN_BALANCE);

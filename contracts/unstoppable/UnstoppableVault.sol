@@ -58,6 +58,8 @@ contract UnstoppableVault is IERC3156FlashLender, ReentrancyGuard, Owned, ERC462
             // within the end of grace period the fee is zero
             return 0;
         } else {
+            //  flash fee = 0.05% of total tokens in valut 
+            // if there are 1 M tokens then flash fee = 50,000 for 0.05 fee factor
             return _amount.mulWadUp(FEE_FACTOR);
         }
     }

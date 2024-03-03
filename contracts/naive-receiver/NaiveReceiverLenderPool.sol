@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
- 
+
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/interfaces/IERC3156FlashLender.sol";
 import "@openzeppelin/contracts/interfaces/IERC3156FlashBorrower.sol";
@@ -14,7 +14,7 @@ import "./FlashLoanReceiver.sol";
 contract NaiveReceiverLenderPool is ReentrancyGuard, IERC3156FlashLender {
 
     address public constant ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
-    uint256 private constant FIXED_FEE = 1 ether; // not the cheapest flash loan
+    uint256 private constant FIXED_FEE = 1 ether; // not the cheapest flash loan => true!
     bytes32 private constant CALLBACK_SUCCESS = keccak256("ERC3156FlashBorrower.onFlashLoan");
 
     error RepayFailed();
@@ -48,7 +48,7 @@ contract NaiveReceiverLenderPool is ReentrancyGuard, IERC3156FlashLender {
         // Transfer ETH and handle control to receiver
         SafeTransferLib.safeTransferETH(address(receiver), amount);
         if(receiver.onFlashLoan(
-            msg.sender,
+            msg.sender,    // flashLoanReceiver
             ETH,
             amount,
             FIXED_FEE,

