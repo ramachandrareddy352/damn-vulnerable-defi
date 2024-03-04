@@ -11,7 +11,7 @@ import "solady/src/auth/OwnableRoles.sol";
  */
 contract RewardToken is ERC20, OwnableRoles {
     uint256 public constant MINTER_ROLE = _ROLE_0;
-
+ 
     constructor() ERC20("Reward Token", "RWT") {
         _initializeOwner(msg.sender);
         _grantRoles(msg.sender, MINTER_ROLE);

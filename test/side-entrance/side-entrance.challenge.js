@@ -22,7 +22,7 @@ describe('[Challenge] Side entrance', function () {
         await setBalance(player.address, PLAYER_INITIAL_ETH_BALANCE);
         expect(await ethers.provider.getBalance(player.address)).to.eq(PLAYER_INITIAL_ETH_BALANCE);
 
-    });
+    }); 
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */

@@ -32,7 +32,7 @@ contract FlashLoanerPool is ReentrancyGuard {
         }
         if (!msg.sender.isContract()) {
             revert CallerIsNotContract();
-        }
+        } 
 
         liquidityToken.transfer(msg.sender, amount);
         msg.sender.functionCall(abi.encodeWithSignature("receiveFlashLoan(uint256)", amount));

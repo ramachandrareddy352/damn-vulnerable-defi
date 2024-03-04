@@ -80,6 +80,7 @@ contract TheRewarderPool {
         uint256 amountDeposited = accountingToken.balanceOfAt(msg.sender, lastSnapshotIdForRewards);
 
         if (amountDeposited > 0 && totalDeposits > 0) {
+            // (amountDeposited * REWARDS) / totalDeposits
             rewards = amountDeposited.mulDiv(REWARDS, totalDeposits);
             if (rewards > 0 && !_hasRetrievedReward(msg.sender)) {
                 rewardToken.mint(msg.sender, rewards);

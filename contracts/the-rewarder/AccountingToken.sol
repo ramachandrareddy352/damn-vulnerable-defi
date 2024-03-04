@@ -30,9 +30,9 @@ contract AccountingToken is ERC20Snapshot, OwnableRoles {
     function burn(address from, uint256 amount) external onlyRoles(BURNER_ROLE) {
         _burn(from, amount);
     }
-
+ 
     function snapshot() external onlyRoles(SNAPSHOT_ROLE) returns (uint256) {
-        return _snapshot();
+        return _snapshot();   // increase snapshot and returns snapshot id
     }
 
     function _transfer(address, address, uint256) internal pure override {

@@ -72,7 +72,7 @@ describe('[Challenge] The rewarder', function () {
         )
         await this.attackerContract.attack();
     });
-
+ 
     after(async function () {
         /** SUCCESS CONDITIONS - NO NEED TO CHANGE ANYTHING HERE */
         // Only one round must have taken place
