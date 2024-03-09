@@ -25,7 +25,7 @@ describe('[Challenge] Truster', function () {
         /** CODE YOUR SOLUTION HERE */
         /**
          * from calldata bytes we approve tokens to player address.
-         * approve call is done by TrusterLenderPool.
+         * approve call is done by TrusterLenderPool. 
          */
         let interface = new ethers.utils.Interface(["function approve(address spender, uint256 amount)"]);
         let data = interface.encodeFunctionData("approve", [player.address, TOKENS_IN_POOL]);

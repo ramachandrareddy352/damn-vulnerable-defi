@@ -34,7 +34,7 @@ contract TrustfulOracle is AccessControlEnumerable {
         if (enableInitialization)
             _setupRole(INITIALIZER_ROLE, msg.sender);  // TrustfulOracleInitializer is INITIALIZER_ROLE
     }
-
+ 
     // A handy utility allowing the deployer to setup initial prices (only once)
     function setupInitialPrices(address[] calldata sources, string[] calldata symbols, uint256[] calldata prices)
         external
@@ -42,6 +42,7 @@ contract TrustfulOracle is AccessControlEnumerable {
     {
         // Only allow one (symbol, price) per source
         // INITIALIZER_ROLE can call it for multiple times
+        // length may be zero address
         require(sources.length == symbols.length && symbols.length == prices.length);
         for (uint256 i = 0; i < sources.length;) {
             unchecked {

@@ -77,7 +77,7 @@ describe('[Challenge] The rewarder', function () {
         /** SUCCESS CONDITIONS - NO NEED TO CHANGE ANYTHING HERE */
         // Only one round must have taken place
         expect(await rewarderPool.roundNumber()).to.be.eq(3);
-
+ 
         // Users should get neglegible rewards this round
         for (let i = 0; i < users.length; i++) {
             await rewarderPool.connect(users[i]).distributeRewards();

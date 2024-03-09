@@ -27,7 +27,7 @@ contract FlashLoanReceiver is IERC3156FlashBorrower {
             if iszero(eq(sload(pool.slot), caller())) {
                 mstore(0x00, 0x48f5c3ed)
                 revert(0x1c, 0x04)
-            }
+            } 
         }
         
         if (token != ETH)

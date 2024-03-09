@@ -66,7 +66,6 @@ contract TheRewarderPool {
     }
 
     function withdraw(uint256 amount) external {
-        // amount should be zero also
         accountingToken.burn(msg.sender, amount);
         SafeTransferLib.safeTransfer(liquidityToken, msg.sender, amount);
     }
@@ -85,7 +84,7 @@ contract TheRewarderPool {
             if (rewards > 0 && !_hasRetrievedReward(msg.sender)) {
                 rewardToken.mint(msg.sender, rewards);
                 lastRewardTimestamps[msg.sender] = uint64(block.timestamp);
-            }
+            } 
         }
     }
 

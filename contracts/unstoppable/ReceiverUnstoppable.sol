@@ -31,7 +31,7 @@ contract ReceiverUnstoppable is Owned, IERC3156FlashBorrower {
         ERC20(token).approve(address(pool), amount);
 
         return keccak256("IERC3156FlashBorrower.onFlashLoan");
-    }
+    } 
 
     function executeFlashLoan(uint256 amount) external onlyOwner {
         address asset = address(pool.asset());

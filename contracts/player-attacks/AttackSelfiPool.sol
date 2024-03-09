@@ -58,6 +58,6 @@ contract AttackSelfiePool {
 
         token.approve(address(pool), AMOUNT);
         return keccak256("ERC3156FlashBorrower.onFlashLoan");
-    }
+    } 
 
 }

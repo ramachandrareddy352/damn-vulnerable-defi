@@ -9,7 +9,7 @@ import { TrustfulOracle } from "./TrustfulOracle.sol";
  */
 contract TrustfulOracleInitializer {
     event NewTrustfulOracle(address oracleAddress);
-
+ 
     TrustfulOracle public oracle;
 
     constructor(address[] memory sources, string[] memory symbols, uint256[] memory initialPrices) {

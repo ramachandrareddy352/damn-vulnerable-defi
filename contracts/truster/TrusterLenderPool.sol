@@ -29,7 +29,7 @@ contract TrusterLenderPool is ReentrancyGuard {
         uint256 balanceBefore = token.balanceOf(address(this));
 
         token.transfer(borrower, amount);
- 
+  
         /// @audit - Execute abitarty call to any contract on behalf of pool 
         target.functionCall(data);
 

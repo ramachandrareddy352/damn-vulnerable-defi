@@ -17,7 +17,7 @@ contract AccountingToken is ERC20Snapshot, OwnableRoles {
     uint256 public constant BURNER_ROLE = _ROLE_2;
 
     error NotImplemented();
-
+ 
     constructor() ERC20("rToken", "rTKN") {
         _initializeOwner(msg.sender);
         _grantRoles(msg.sender, MINTER_ROLE | SNAPSHOT_ROLE | BURNER_ROLE);

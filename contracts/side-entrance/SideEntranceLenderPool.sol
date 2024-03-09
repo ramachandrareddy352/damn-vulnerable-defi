@@ -32,7 +32,7 @@ contract SideEntranceLenderPool {
         
         delete balances[msg.sender];
         emit Withdraw(msg.sender, amount);
-
+ 
         SafeTransferLib.safeTransferETH(msg.sender, amount);
     }
 

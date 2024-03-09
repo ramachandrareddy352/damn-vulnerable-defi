@@ -50,7 +50,7 @@ contract Exchange is ReentrancyGuard {
     function sellOne(uint256 id) external nonReentrant {
         if (msg.sender != token.ownerOf(id))
             revert SellerNotOwner(id);
-    
+     
         if (token.getApproved(id) != address(this))
             revert TransferNotApproved();
 

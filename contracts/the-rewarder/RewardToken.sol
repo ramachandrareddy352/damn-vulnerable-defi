@@ -21,3 +21,4 @@ contract RewardToken is ERC20, OwnableRoles {
         _mint(to, amount);
     }
 }
+ 
