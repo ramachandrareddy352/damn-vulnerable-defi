@@ -8,7 +8,7 @@ import "./AuthorizedExecutor.sol";
 /**
  * @title SelfAuthorizedVault
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)
- */
+ */ 
 contract SelfAuthorizedVault is AuthorizedExecutor {
     uint256 public constant WITHDRAWAL_LIMIT = 1 ether;
     uint256 public constant WAITING_PERIOD = 15 days;

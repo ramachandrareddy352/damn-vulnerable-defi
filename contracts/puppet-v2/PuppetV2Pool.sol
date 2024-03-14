@@ -9,7 +9,7 @@ interface IERC20 {
     function transferFrom(address from, address to, uint256 amount) external returns (bool);
     function balanceOf(address account) external returns (uint256);
 }
-
+ 
 /**
  * @title PuppetV2Pool
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)

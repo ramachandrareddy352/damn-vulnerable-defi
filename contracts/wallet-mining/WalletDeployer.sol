@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 interface IGnosisSafeProxyFactory {
     function createProxy(address masterCopy, bytes calldata data) external returns (address);
 }
-
+ 
 /**
  * @title  WalletDeployer
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)
@@ -21,7 +21,7 @@ contract WalletDeployer {
 
     uint256 public constant pay = 1 ether;
     address public immutable chief = msg.sender;
-    address public immutable gem;
+    address public immutable gem;   // gem is the DVD token address
 
     address public mom;
 

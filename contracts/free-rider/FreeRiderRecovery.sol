@@ -38,12 +38,12 @@ contract FreeRiderRecovery is ReentrancyGuard, IERC721Receiver {
         override
         nonReentrant
         returns (bytes4)
-    {
+    { 
         if (msg.sender != address(nft))
             revert CallerNotNFT();
         if (tx.origin != beneficiary)
             revert OriginNotBeneficiary();
-        if (_tokenId > 5)
+        if (_tokenId > 5) 
             revert InvalidTokenID(_tokenId);
         if (nft.ownerOf(_tokenId) != address(this))
             revert StillNotOwningToken(_tokenId);

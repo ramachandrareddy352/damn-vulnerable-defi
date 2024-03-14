@@ -8,7 +8,7 @@ import "../DamnValuableNFT.sol";
 /**
  * @title FreeRiderNFTMarketplace
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)
- */
+ */ 
 contract FreeRiderNFTMarketplace is ReentrancyGuard {
     using Address for address payable;
 
@@ -69,6 +69,7 @@ contract FreeRiderNFTMarketplace is ReentrancyGuard {
 
         offers[tokenId] = price;
         /// @audit-high/medium := what if the owner remove approval for this contract after calling offer function , the offers mapping is not updated
+        // here we does not transferfrom the nft to address(this)
 
         assembly { // gas savings
             sstore(0x02, add(sload(0x02), 0x01))
@@ -94,7 +95,7 @@ contract FreeRiderNFTMarketplace is ReentrancyGuard {
             revert InsufficientPayment();
 
         --offersCount;
-
+ 
         // transfer from seller to buyer
         DamnValuableNFT _token = token; // cache for gas savings
         _token.safeTransferFrom(_token.ownerOf(tokenId), msg.sender, tokenId);

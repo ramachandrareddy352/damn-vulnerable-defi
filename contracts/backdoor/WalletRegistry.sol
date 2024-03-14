@@ -6,7 +6,7 @@ import "solady/src/utils/SafeTransferLib.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@gnosis.pm/safe-contracts/contracts/GnosisSafe.sol";
 import "@gnosis.pm/safe-contracts/contracts/proxies/IProxyCreationCallback.sol";
- 
+
 /**
  * @title WalletRegistry
  * @notice A registry for Gnosis Safe wallets.
@@ -25,15 +25,6 @@ contract WalletRegistry is IProxyCreationCallback, Ownable {
 
     mapping(address => bool) public beneficiaries;
     mapping(address => address) public wallets;     // owner => wallet
-
-    error NotEnoughFunds();
-    error CallerNotFactory();
-    error FakeMasterCopy();
-    error InvalidInitialization();
-    error InvalidThreshold(uint256 threshold);
-    error InvalidOwnersCount(uint256 count);
-    error OwnerIsNotABeneficiary();
-    error InvalidFallbackManager(address fallbackManager);
 
     constructor(
         address masterCopyAddress,
@@ -63,54 +54,40 @@ contract WalletRegistry is IProxyCreationCallback, Ownable {
      * @notice Function executed when user creates a Gnosis Safe wallet via GnosisSafeProxyFactory::createProxyWithCallback
      *          setting the registry's address as the callback.
      */
+    // after calling proxyCreated by any one of the user, he creates a multisig wallet using GnosisSafeFactory and the DVD tokens are send to that user, so we create a attack contract and we call the proxyCreated for the user by the attacker.
     function proxyCreated(GnosisSafeProxy proxy, address singleton, bytes calldata initializer, uint256)
         external
         override
     {
-        if (token.balanceOf(address(this)) < PAYMENT_AMOUNT) { // balance should be greater than 10 ethers
-            revert NotEnoughFunds();
-        }
+        require(token.balanceOf(address(this)) >= PAYMENT_AMOUNT, "Balance should be greater than 10 ethers");
 
         address payable walletAddress = payable(proxy);
 
         // Ensure correct factory and master copy
         // only walletfactory can call the function
-        if (msg.sender != walletFactory) {
-            revert CallerNotFactory();
-        }
+        require(msg.sender == walletFactory, "Only walletFactory can call");
 
-        if (singleton != masterCopy) {
-            revert FakeMasterCopy();
-        }
+        require(singleton == masterCopy,"Invalid master copy");
 
         // Ensure initial calldata was a call to `GnosisSafe::setup`
-        if (bytes4(initializer[:4]) != GnosisSafe.setup.selector) {
-            revert InvalidInitialization();   // first 4 bytes is function selector 
-        }
+        require(bytes4(initializer[:4]) == GnosisSafe.setup.selector, "Invalid setup function selctor");
 
         // Ensure wallet initialization is the expected
         uint256 threshold = GnosisSafe(walletAddress).getThreshold();
-        if (threshold != EXPECTED_THRESHOLD) {   // 1
-            revert InvalidThreshold(threshold);
-        }
+        require(threshold == EXPECTED_THRESHOLD,"Invaldi threshold");
 
         address[] memory owners = GnosisSafe(walletAddress).getOwners();
-        if (owners.length != EXPECTED_OWNERS_COUNT) {  // 1
-            revert InvalidOwnersCount(owners.length);
-        }
+        require(owners.length == EXPECTED_OWNERS_COUNT, "Invalid owners count");
 
         // Ensure the owner is a registered beneficiary
         address walletOwner;
         unchecked {
             walletOwner = owners[0];
         }
-        if (!beneficiaries[walletOwner]) {
-            revert OwnerIsNotABeneficiary();
-        }
+        require(beneficiaries[walletOwner], "Invalid beneficiary");
 
         address fallbackManager = _getFallbackManager(walletAddress);
-        if (fallbackManager != address(0))
-            revert InvalidFallbackManager(fallbackManager);
+        require(fallbackManager == address(0), "InvalidFallbackManager");
 
         // Remove owner as beneficiary
         beneficiaries[walletOwner] = false;

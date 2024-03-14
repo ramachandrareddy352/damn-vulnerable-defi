@@ -83,7 +83,7 @@ describe('[Challenge] Puppet', function () {
         this.attackerContract = await AttackerContractFactory.deploy(
             token.address, uniswapExchange.address, lendingPool.address
         )
-
+ 
         expect(await ethers.provider.getBalance(player.address)).to.equal(PLAYER_INITIAL_ETH_BALANCE);
  
         token.connect(player).transfer(this.attackerContract.address, PLAYER_INITIAL_TOKEN_BALANCE);

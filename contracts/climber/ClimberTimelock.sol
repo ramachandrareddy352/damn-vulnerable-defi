@@ -61,6 +61,7 @@ contract ClimberTimelock is ClimberTimelockBase {
         }
 
         operations[id].readyAtTimestamp = uint64(block.timestamp) + delay;
+        // every new operation is added to queue afetr scheduleing of one hour.
         operations[id].known = true;
     }
 
@@ -74,11 +75,9 @@ contract ClimberTimelock is ClimberTimelockBase {
         if (targets.length <= MIN_TARGETS) {
             revert InvalidTargetsCount();
         }
-
         if (targets.length != values.length) {
             revert InvalidValuesCount();
         }
-
         if (targets.length != dataElements.length) {
             revert InvalidDataElementsCount();
         }

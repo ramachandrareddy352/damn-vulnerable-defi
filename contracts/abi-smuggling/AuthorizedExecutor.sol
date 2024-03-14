@@ -10,9 +10,9 @@ import "@openzeppelin/contracts/utils/Address.sol";
  */
 abstract contract AuthorizedExecutor is ReentrancyGuard {
     using Address for address;
-
+ 
     bool public initialized;
-
+ 
     // action identifier => allowed
     mapping(bytes32 => bool) public permissions;
 
@@ -55,7 +55,7 @@ abstract contract AuthorizedExecutor is ReentrancyGuard {
         }
 
         if (!permissions[getActionId(selector, msg.sender, target)]) {
-            revert NotAllowed();
+            revert NotAllowed();  // here selector is withdraw
         }
 
         _beforeFunctionCall(target, actionData);

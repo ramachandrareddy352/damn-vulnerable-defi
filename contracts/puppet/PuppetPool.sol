@@ -37,7 +37,7 @@ contract PuppetPool is ReentrancyGuard {
         }
         unchecked {
             deposits[msg.sender] += depositRequired;
-        }
+        } 
 
         // Fails if the pool doesn't have enough tokens in liquidity
         if(!token.transfer(recipient, amount))
