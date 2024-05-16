@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0; 
 
 import { TrustfulOracle } from "./TrustfulOracle.sol";
-
+ 
 /**
  * @title TrustfulOracleInitializer
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)

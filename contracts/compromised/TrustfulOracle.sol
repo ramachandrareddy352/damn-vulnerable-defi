@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "solady/src/utils/LibSort.sol";
- 
+
 /**
  * @title TrustfulOracle
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)

@@ -10,7 +10,7 @@ import "solady/src/auth/OwnableRoles.sol";
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)
  * @notice A limited pseudo-ERC20 token to keep track of deposits and withdrawals
  *         with snapshotting capabilities.
- */
+ */ 
 contract AccountingToken is ERC20Snapshot, OwnableRoles {
     uint256 public constant MINTER_ROLE = _ROLE_0;
     uint256 public constant SNAPSHOT_ROLE = _ROLE_1;

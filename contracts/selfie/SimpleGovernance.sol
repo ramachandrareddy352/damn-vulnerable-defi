@@ -9,7 +9,7 @@ import "./ISimpleGovernance.sol"
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)
  */
 contract SimpleGovernance is ISimpleGovernance {
- 
+
     uint256 private constant ACTION_DELAY_IN_SECONDS = 2 days;
     DamnValuableTokenSnapshot private _governanceToken;
     uint256 private _actionCounter;

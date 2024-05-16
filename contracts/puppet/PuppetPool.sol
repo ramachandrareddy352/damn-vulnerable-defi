@@ -11,7 +11,7 @@ contract PuppetPool is ReentrancyGuard {
     uint256 public constant DEPOSIT_FACTOR = 2;
     address public immutable uniswapPair;
     DamnValuableToken public immutable token;
-
+ 
     mapping(address => uint256) public deposits;
 
     error NotEnoughCollateral();

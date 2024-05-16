@@ -11,7 +11,7 @@ import { UnstoppableVault, ERC20 } from "../unstoppable/UnstoppableVault.sol";
  */
 contract ReceiverUnstoppable is Owned, IERC3156FlashBorrower {
     UnstoppableVault private immutable pool;
- 
+
     error UnexpectedFlashLoan();
 
     constructor(address poolAddress) Owned(msg.sender) {

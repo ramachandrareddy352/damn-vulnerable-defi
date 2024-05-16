@@ -12,7 +12,7 @@ import "./SimpleGovernance.sol";
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)
  */ 
 contract SelfiePool is ReentrancyGuard, IERC3156FlashLender {
-
+ 
     ERC20Snapshot public immutable token;
     SimpleGovernance public immutable governance;
     bytes32 private constant CALLBACK_SUCCESS = keccak256("ERC3156FlashBorrower.onFlashLoan");

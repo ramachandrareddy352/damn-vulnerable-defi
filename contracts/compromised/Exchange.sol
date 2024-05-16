@@ -46,7 +46,7 @@ contract Exchange is ReentrancyGuard {
 
         emit TokenBought(msg.sender, id, price);
     }
-
+ 
     function sellOne(uint256 id) external nonReentrant {
         if (msg.sender != token.ownerOf(id))
             revert SellerNotOwner(id);

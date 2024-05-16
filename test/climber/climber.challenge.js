@@ -7,8 +7,8 @@ describe("[Challenge] Climber", function () {
   let timelock, vault, token;
 
   const VAULT_TOKEN_BALANCE = 10000000n * 10n ** 18n;
-  const PLAYER_INITIAL_ETH_BALANCE = 1n * 10n ** 17n;
-  const TIMELOCK_DELAY = 60 * 60;
+  const PLAYER_INITIAL_ETH_BALANCE = 1n * 10n ** 17n;  // 0.1 eth
+  const TIMELOCK_DELAY = 60 * 60;  // 1 hour
 
   before(async function () {
     /** SETUP SCENARIO - NO NEED TO CHANGE ANYTHING HERE */

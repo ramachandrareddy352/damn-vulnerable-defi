@@ -7,7 +7,7 @@ import "solady/src/utils/SafeTransferLib.sol";
 interface IFlashLoanEtherReceiver {
     function execute() external payable;
 }
-
+ 
 /**
  * @title SideEntranceLenderPool
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)

@@ -90,7 +90,8 @@ contract ClimberTimelock is ClimberTimelockBase {
                 ++i;
             }
         }
-
+        
+        // @audit-high : 
         if (getOperationState(id) != OperationState.ReadyForExecution) {
             revert NotReadyForExecution(id);
         }

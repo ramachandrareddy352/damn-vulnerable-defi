@@ -9,7 +9,7 @@ interface IPool {
 }
 
 contract AttackSideEntranceLender {
-
+ 
     IPool immutable pool;
     address immutable player;
 

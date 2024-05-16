@@ -9,7 +9,7 @@ interface ISimpleGovernance {
         address target;
         bytes data;
     } 
- 
+    
     error NotEnoughVotes(address who);
     error CannotExecute(uint256 actionId);
     error InvalidTarget();

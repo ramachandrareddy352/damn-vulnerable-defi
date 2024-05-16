@@ -12,7 +12,7 @@ import { AccountingToken } from "./AccountingToken.sol";
  */
 contract TheRewarderPool {
     using FixedPointMathLib for uint256;
-
+ 
     // Minimum duration of each round of rewards in seconds
     uint256 private constant REWARDS_ROUND_MIN_DURATION = 5 days;
     
