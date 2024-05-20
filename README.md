@@ -10,7 +10,8 @@ Visit [damnvulnerabledefi.xyz](https://damnvulnerabledefi.xyz)
 
 ## Read blog
 
-https://ramachandrareddy.netlify.app/blog/damnDefi.html
+https://ramachandrareddy.netlify.app/blog/damnDefi.html/
+
 
 ## Help
 
