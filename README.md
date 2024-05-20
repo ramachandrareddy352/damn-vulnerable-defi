@@ -8,6 +8,10 @@ Featuring flash loans, price oracles, governance, NFTs, lending pools, smart con
 
 Visit [damnvulnerabledefi.xyz](https://damnvulnerabledefi.xyz)
 
+## Read blog
+
+https://ramachandrareddy.netlify.app/blog/damnDefi.html
+
 ## Help
 
 For Q&A and troubleshooting running Damn Vulnerable DeFi, go [here](https://github.com/tinchoabbate/damn-vulnerable-defi/discussions/categories/support-q-a-troubleshooting).
